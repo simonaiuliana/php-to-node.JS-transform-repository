@@ -1,47 +1,72 @@
-// ajouter (importer) le module Express
+// Importer le module Express
 const express = require('express');
-
-// créer une application
-const app = express();
-
-// Définition du répertoire public contenant les ressources externes (img, CSS, JS,...)
 const path = require('path');
-app.use(express.static(path.join(__dirname,'public')));
+const app = express();
+const port = 3000;
+
+// Configure EJS comme moteur de templates
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views')); // Dossier pour les fichiers de vues
+
+// Middleware pour analyser les données du corps des requêtes
+app.use(express.urlencoded({ extended: true })); // Pour les données de formulaire encodées en URL
+app.use(express.json()); // Pour les données JSON
+
+// Définir le répertoire public contenant les ressources externes (img, CSS, JS,...)
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes vers les différentes pages
-
-app.get('/',function(requete,reponse){
-    reponse.render('accueil.ejs', {nomPage: 'Accueil'});
+app.get('/', (req, res) => {
+    res.render('accueil', { nomPage: 'Accueil' });
 });
 
-app.get('/geo',function(requete,reponse){
-    reponse.render('geographie.ejs', {nomPage: 'Géographie'});
+app.get('/geo', (req, res) => {
+    res.render('geographie', { nomPage: 'Géographie' });
 });
 
-app.get('/hist',function(requete,reponse){
-    reponse.render('histoire.ejs', {nomPage: 'Histoire'});
+app.get('/hist', (req, res) => {
+    res.render('histoire', { nomPage: 'Histoire' });
 });
 
-app.get('/cult',function(requete,reponse){
-    reponse.render('culture.ejs', {nomPage: 'Culture'});
+app.get('/cult', (req, res) => {
+    res.render('culture', { nomPage: 'Culture' });
 });
 
-app.get('/gal',function(requete,reponse){
-    reponse.render('galerie.ejs', {nomPage: 'Galerie'});
+app.get('/gal', (req, res) => {
+    res.render('galerie', { nomPage: 'Galerie' });
 });
 
-app.get('/form',function(requete,reponse){
-    reponse.render('contact.ejs', {nomPage: 'Contact'});
+app.get('/form', (req, res) => {
+    res.render('contact', { nomPage: 'Contact' });
 });
 
-app.get('/link',function(requete,reponse){
-    reponse.render('liens.ejs', {nomPage: 'Liens'});
+app.get('/link', (req, res) => {
+    res.render('liens', { nomPage: 'Liens' });
 });
 
-// définir une "page" gérant l'erreur 404
-app.use(function(requete,reponse,next){
-    reponse.status(404).render('page-404.ejs', {nomPage: 'Erreur 404'});
+// Route POST pour traiter les données du formulaire
+app.post('/traitement-formulaire', (req, res) => {
+    const { nom, email, message } = req.body;
+    // mesage personalise
+    const mesajPersonalizat = `Bonjour ${nom}, votre message a été reçu ! Voici ce que vous avez envoyé : "${message}". Nous vous contacterons bientôt à l'adresse email ${email}.`;
+
+    // dates afiché dans la console
+    console.log('Nom:', nom);
+    console.log('Email:', email);
+    console.log('Message:', message);
+
+    // envoy de mesaj personalisé
+    res.render('merci', { nom, email, message });
 });
 
-app.listen(8080);       // le serveur web écoute sur le port 8080
-console.log("Express est démarré et attend vos requêtes...");
+
+// Route pour gérer les erreurs 404
+app.use((req, res, next) => {
+    res.status(404).render('page-404', { nomPage: 'Erreur 404' });
+});
+
+// Démarrage du serveur
+app.listen(port, () => {
+    console.log(`Server listening at http://localhost:${port}`);
+});
+

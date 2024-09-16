@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Réponse au formulaire</title>
+    <style>
+        /* Stilizare simplă pentru centru */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        /* Stilizare pentru chenar */
+        .message-container {
+            background-color: white;
+            border: 2px solid #3498db;
+            padding: 20px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        /* Stilizarea constantelor (nume, email) */
+        .highlight {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- Include bannière -->
+    <%- include('inc/banniere.ejs', { nomPage: 'Merci' }); -%>
+
+    <!-- Include menu -->
+    <%- include('inc/menu.ejs'); -%>
+
+    <div class="message-container">
+        <p>Bonjour <span class="highlight"><%= nom %></span>, votre message a été reçu !</p>
+        <p>Voici ce que vous avez envoyé : "<span class="highlight"><%= message %></span>".</p>
+        <p>Nous vous contacterons bientôt à <span class="highlight"><%= email %></span>.</p>
+    </div>
+</body>
+</html>
